@@ -46,7 +46,8 @@ public:
     void rotate_left(node* v);
     void rotate_right(node* v);
     void remove(int key);
-
+    node* rotate_left(node* x);
+    node* rotate_right(node* y);
 
 };
 
