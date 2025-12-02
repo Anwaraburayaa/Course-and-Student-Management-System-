@@ -2,6 +2,19 @@
 
 #include <math.h>
 
+//TODO L haya
+//TODO R haya
+//TODO LR haya
+//TODO RR haya
+//TODO LL haya
+//TODO RL haya
+//TODO node stuff anwar
+//TODO big three of tree anwar
+//TODO insert anwar
+//TODO remove anwar
+//TODO find anwar
+
+
 template<class T>
 class AVLTree {
 private:
