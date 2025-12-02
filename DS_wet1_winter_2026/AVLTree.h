@@ -19,9 +19,6 @@ template<class T>
 class AVLTree {
 private:
     node* root;
-    AVLTree() : root(nullptr) {
-
-    }
     struct node
     {
         int m_key;
@@ -30,7 +27,9 @@ private:
         struct node* m_left_son;
         struct node* m_right_son;
 
-        explicit node(const T &data, unsigned int key); //ctor node needs to check uniqness
+        node(const T& data, int key)  : m_key(key), m_height(1),m_data(data), m_left_son(nullptr),
+        m_right_son(nullptr){}
+
         ~node() {
             delete m_left_son;
             delete m_right_son;
@@ -38,6 +37,7 @@ private:
     };
 
 public:
+    AVLTree() : root(nullptr) {}
     int get_height(node* v);
     void update_height(node* v);
     int balance_factor(node* v);
