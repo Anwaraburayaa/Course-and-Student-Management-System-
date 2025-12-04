@@ -37,23 +37,30 @@ private:
     };
 
 public:
+
     AVLTree() : root(nullptr) {}
     int get_height(node* v);
+
     void update_height(node* v);
     int balance_factor(node* v);
-    node* find(int key);
-    void insert();
+
     void rotate_left(node* v);
     void rotate_right(node* v);
+
+    node* find(int key);
+    void insert();
     void remove(int key);
 
-
 };
+
+/*-----cotrs-----*/
 
 template <class T>
 int AVLTree<T>::get_height(node* v) {
     return (v == nullptr) ? 0 : v->height;
 }
+
+/*-----helper internal functions-----*/
 
 template <class T>
 void AVLTree<T>::update_height(node* v){
@@ -63,5 +70,14 @@ void AVLTree<T>::update_height(node* v){
 template <class T>
 int AVLTree<T>::balance_factor(node* v) {
     return get_height(v->left_son) - get_height(v->right_son);
+}
+
+template <class T>
+void AVLTree<T>::rotate_left(node* v) {
+
+}
+
+template <class T>
+void AVLTree<T>::rotate_right(node* v) {
 }
 
