@@ -18,7 +18,7 @@
 template<class T>
 class AVLTree {
 private:
-    node* root;
+
     struct node
     {
         int m_key;
@@ -35,17 +35,21 @@ private:
             delete m_right_son;
         }
     };
+    node* m_root;
 
-public:
+private:
 
-    AVLTree() : root(nullptr) {}
+    AVLTree() : m_root(nullptr) {}
     int get_height(node* v);
 
     void update_height(node* v);
     int balance_factor(node* v);
 
-    void rotate_left(node* v);
-    void rotate_right(node* v);
+    node* rotate_right(node* d);
+    node* rotate_left(node* d);
+    node* rotate_left_right(node* v);
+    node* rotate_right_left(node* v);
+    node* rebalance(node* v);
 
     node* find(int key);
     void insert();
@@ -57,27 +61,69 @@ public:
 
 template <class T>
 int AVLTree<T>::get_height(node* v) {
-    return (v == nullptr) ? 0 : v->height;
+    return (v == nullptr) ? 0 : v->m_height;
 }
 
 /*-----helper internal functions-----*/
 
 template <class T>
 void AVLTree<T>::update_height(node* v){
-    v->height = 1 + max(height(v->left), height(v->right));
+    v->height = 1 + max(get_height(v->m_left_son), get_height(v->m_right_son));
 }
 
 template <class T>
 int AVLTree<T>::balance_factor(node* v) {
-    return get_height(v->left_son) - get_height(v->right_son);
+    return get_height(v->m_left_son) - get_height(v->m_right_son);
+}
+
+/*-----rotations----*/
+
+// Performs a single Right Rotation (LL case) by making the left child (b) the new parent of d
+//following the slides names for the nodes
+//b should have bf of +1
+//check for nulls and catching mechanisms (here or in application later)
+template <class T>
+typename AVLTree<T>::node* AVLTree<T>::rotate_right(node* d) {
+    node* b_left_sub_tree = d->m_left_son;
+    d->m_left_son = b_left_sub_tree->m_right_son;
+    b_left_sub_tree->m_right_son = d;
+
+    update_height(d);
+    update_height(b_left_sub_tree);
+
+    return b_left_sub_tree;
+}
+
+// Performs a single Left Rotation (RR case) by making the right child (b) the new parent of d
+template <class T>
+typename AVLTree<T>::node* AVLTree<T>::rotate_left(node* d) {
+    node* b_right_sub_tree = d->m_right_son;
+    d->m_right_son = b_right_sub_tree->m_left_son;
+    b_right_sub_tree->m_left_son = d;
+
+    update_height(d);
+    update_height(b_right_sub_tree);
+
+    return b_right_sub_tree;
+
 }
 
 template <class T>
-void AVLTree<T>::rotate_left(node* v) {
+typename AVLTree<T>::node* AVLTree<T>::rotate_left_right(node* v) {
 
 }
 
 template <class T>
-void AVLTree<T>::rotate_right(node* v) {
+typename AVLTree<T>::node* AVLTree<T>::rotate_right_left(node* v) {
 }
+
+template <class T>
+typename AVLTree<T>::node* AVLTree<T>::rebalance(node* v) {
+}
+
+
+
+/*-----Tree operations-----*/
+
+
 
