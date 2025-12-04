@@ -47,8 +47,8 @@ private:
 
     node* rotate_right(node* d);
     node* rotate_left(node* d);
-    node* rotate_left_right(node* v);
-    node* rotate_right_left(node* v);
+    node* rotate_left_right(node* f);
+    node* rotate_right_left(node* f);
     node* rebalance(node* v);
 
     node* find(int key);
@@ -109,12 +109,15 @@ typename AVLTree<T>::node* AVLTree<T>::rotate_left(node* d) {
 }
 
 template <class T>
-typename AVLTree<T>::node* AVLTree<T>::rotate_left_right(node* v) {
-
+typename AVLTree<T>::node* AVLTree<T>::rotate_left_right(node* f) {
+    node* b_left_sub_tree = f->m_left_son;
+    f->m_left_son = rotate_left(b_left_sub_tree);
+    node* d_new_root = rotate_right(f);
+    return d_new_root;
 }
 
 template <class T>
-typename AVLTree<T>::node* AVLTree<T>::rotate_right_left(node* v) {
+typename AVLTree<T>::node* AVLTree<T>::rotate_right_left(node* f) {
 }
 
 template <class T>
