@@ -22,7 +22,7 @@ private:
     {
         int m_key;
         int m_height;
-        void* m_data;
+        T m_data;
         struct node* m_left_son;
         struct node* m_right_son;
 
@@ -74,7 +74,7 @@ int AVLTree<T>::get_height(node* v) {
 
 template <class T>
 void AVLTree<T>::update_height(node* v){
-    v->height = 1 + max2(get_height(v->m_left_son), get_height(v->m_right_son));
+    v->m_height = 1 + max2(get_height(v->m_left_son), get_height(v->m_right_son));
 }
 
 template <class T>
@@ -237,20 +237,18 @@ typename AVLTree<T>::node* AVLTree<T>::rebalance(node* v) {
     update_height(v);
     int curr_BF = balance_factor(v);
     if (curr_BF > 1) {
-        if (balance_factor(v->m_right_son) < 0) {
-            return rotate_left_right(v); // (LR) case
+        if (v->m_left_son && balance_factor(v->m_left_son) < 0) {  //check LEFT son
+            return rotate_left_right(v); //(LR) case
         }
-        return rotate_right(v); // (LL) case
+        return rotate_right(v); //(LL) case
     }
-
     if (curr_BF < -1) {
-        if (balance_factor(v->m_left_son)) {
-            return rotate_right_left(v); // (RL) case
+        if (v->m_right_son && balance_factor(v->m_right_son) > 0) {  //check RIGHT son and compare > 0
+            return rotate_right_left(v); //(RL) case
         }
         return rotate_left(v); // (RR) case
     }
-
-    return v; // |BF(v)| <= 1
+    return v; //|BF(v)| <= 1
 }
 
 
