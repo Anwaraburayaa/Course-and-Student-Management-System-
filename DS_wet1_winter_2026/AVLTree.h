@@ -58,7 +58,7 @@ public:
 
 
     node* find(int key);
-    void insert(node* root, const int key );
+    bool insert(int key, const T& data);
     void remove(int key);
 
 };
@@ -73,7 +73,7 @@ int AVLTree<T>::get_height(node* v) {
 
 template <class T>
 void AVLTree<T>::update_height(node* v){
-    v->height = 1 + max(get_height(v->m_left_son), get_height(v->m_right_son));
+    v->height = 1 + max2(get_height(v->m_left_son), get_height(v->m_right_son));
 }
 
 template <class T>
@@ -87,8 +87,8 @@ typename AVLTree<T>::node *AVLTree<T>::insert_aux(node *curr, int key, const T &
         inserted=true;
         return new node(data,key);
     }
-    //if the tree is not empty we do the prosses recursivly tell we find it place
-    //we first complare the key to the root
+    //if the tree is not empty we do the presses recursivly tell we find it place
+    //we first compare the key to the root
     if (key< curr->m_key) {
         curr->m_left_son=insert_aux(curr->m_left_son,key,data, inserted);
     }
@@ -159,10 +159,15 @@ typename AVLTree<T>::node* AVLTree<T>::rebalance(node* v) {
 
 
 /*-----Tree operations-----*/
-template <class T>
-void AVLTree<T>::node* AVLTree<T>::node* insert(node* root, int key) {
+template<class T>
+bool AVLTree<T>::insert(int key, const T &data) {
+    bool inserted=false;
+    m_root= insert_aux(m_root, key, data, inserted);
+    return inserted;
+}
 
-    }
+
+
 
 
 
