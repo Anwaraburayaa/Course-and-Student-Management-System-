@@ -1,6 +1,5 @@
 #pragma once
 
-#include <math.h>
 
 //TODO L haya
 //TODO R haya
@@ -107,8 +106,9 @@ typename AVLTree<T>::node *AVLTree<T>::insert_aux(node *curr, int key, const T &
     update_height(curr); // These lines are correctly skipped on duplicate.
     return rebalance(curr);
 }
+
 template<class T>
-node* AVLTree<T>::find_aux(node* curr, int key) {
+typename AVLTree<T>::node* AVLTree<T>::find_aux(node* curr, int key) {
     if (curr == nullptr || curr->m_key == key) {
         return curr;
     }
@@ -221,18 +221,36 @@ typename AVLTree<T>::node* AVLTree<T>::rotate_left(node* d) {
 
 template <class T>
 typename AVLTree<T>::node* AVLTree<T>::rotate_left_right(node* f) {
-    node* b_left_sub_tree = f->m_left_son;
-    f->m_left_son = rotate_left(b_left_sub_tree);
-    node* d_new_root = rotate_right(f);
-    return d_new_root;
+    f->m_left_son = rotate_left(f->m_left_son);
+    return rotate_right(f);
 }
 
 template <class T>
 typename AVLTree<T>::node* AVLTree<T>::rotate_right_left(node* f) {
+    f->m_right_son = rotate_right(f->m_right_son);
+    return rotate_left(f);
 }
 
+// v is the node that was inserted or removed -> the root of the subtree we need to rotate
 template <class T>
 typename AVLTree<T>::node* AVLTree<T>::rebalance(node* v) {
+    update_height(v);
+    int curr_BF = balance_factor(v);
+    if (curr_BF > 1) {
+        if (balance_factor(v->m_right_son) < 0) {
+            return rotate_left_right(v); // (LR) case
+        }
+        return rotate_right(v); // (LL) case
+    }
+
+    if (curr_BF < -1) {
+        if (balance_factor(v->m_left_son)) {
+            return rotate_right_left(v); // (RL) case
+        }
+        return rotate_left(v); // (RR) case
+    }
+
+    return v; // |BF(v)| <= 1
 }
 
 
@@ -244,7 +262,7 @@ bool AVLTree<T>::insert(int key, const T &data) {
     return inserted;
 }
 template<class T>
-node* AVLTree<T>::find(int key) {
+typename AVLTree<T>::node* AVLTree<T>::find(int key) {
     return find_aux(m_root, key);
 }
 
