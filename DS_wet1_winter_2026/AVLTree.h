@@ -36,8 +36,13 @@ private:
         }
     };
     node* m_root;
-
-private:
+    //helper recurrsive funtions for insert/find/delete:
+    node* insert_aux(node* curr, int key, const T& data, bool& inserted);
+//helper fuction max:
+    int max2(int a, int b) const {
+        return (a > b) ? a : b;
+    }
+public:
 
     AVLTree() : m_root(nullptr) {}
     int get_height(node* v);
@@ -51,8 +56,9 @@ private:
     node* rotate_right_left(node* f);
     node* rebalance(node* v);
 
+
     node* find(int key);
-    void insert();
+    void insert(node* root, const int key );
     void remove(int key);
 
 };
@@ -63,7 +69,6 @@ template <class T>
 int AVLTree<T>::get_height(node* v) {
     return (v == nullptr) ? 0 : v->m_height;
 }
-
 /*-----helper internal functions-----*/
 
 template <class T>
@@ -75,6 +80,34 @@ template <class T>
 int AVLTree<T>::balance_factor(node* v) {
     return get_height(v->m_left_son) - get_height(v->m_right_son);
 }
+template<class T>
+typename AVLTree<T>::node *AVLTree<T>::insert_aux(node *curr, int key, const T &data, bool &inserted) {
+    //if the tree is empty we insert the new nood at the root
+    if (curr==nullptr) {
+        inserted=true;
+        return new node(data,key);
+    }
+    //if the tree is not empty we do the prosses recursivly tell we find it place
+    //we first complare the key to the root
+    if (key< curr->m_key) {
+        curr->m_left_son=insert_aux(curr->m_left_son,key,data, inserted);
+    }
+    else if (key>curr->m_key) {
+        curr->m_right_son_son=insert_aux(curr->m_right_son,key,data, inserted);
+    }
+    //if key already exists we ruturn curr
+    else {
+        inserted=false;
+        return curr;
+    }
+    ///now we update the tree height:
+    update_height(curr);
+    return rebalance(curr);
+}
+
+
+
+
 
 /*-----rotations----*/
 
@@ -125,8 +158,14 @@ typename AVLTree<T>::node* AVLTree<T>::rebalance(node* v) {
 }
 
 
-
 /*-----Tree operations-----*/
+template <class T>
+void AVLTree<T>::node* AVLTree<T>::node* insert(node* root, int key) {
+
+    }
+
+
+
 
 
 
