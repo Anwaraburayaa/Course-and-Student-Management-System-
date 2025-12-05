@@ -47,7 +47,7 @@ public:
 
     AVLTree() : m_root(nullptr) {}
     int get_height(node* v);
-
+    ~AVLTree() { delete m_root; }
     void update_height(node* v);
     int balance_factor(node* v);
 
