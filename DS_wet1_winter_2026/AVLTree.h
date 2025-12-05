@@ -36,8 +36,10 @@ private:
         }
     };
     node* m_root;
-    //helper recurrsive funtions for insert/find/delete:
+    //helper recurrsive funtions for insert, find & delete:
     node* insert_aux(node* curr, int key, const T& data, bool& inserted);
+    node* find_aux(node* curr, int key);
+    node* remove_aux(node* curr, int key, bool& deleted);
 //helper fuction max:
     int max2(int a, int b) const {
         return (a > b) ? a : b;
@@ -59,7 +61,7 @@ public:
 
     node* find(int key);
     bool insert(int key, const T& data);
-    void remove(int key);
+    bool remove(int key);
 
 };
 
@@ -80,6 +82,7 @@ template <class T>
 int AVLTree<T>::balance_factor(node* v) {
     return get_height(v->m_left_son) - get_height(v->m_right_son);
 }
+
 template<class T>
 typename AVLTree<T>::node *AVLTree<T>::insert_aux(node *curr, int key, const T &data, bool &inserted) {
     //if the tree is empty we insert the new nood at the root
@@ -93,17 +96,92 @@ typename AVLTree<T>::node *AVLTree<T>::insert_aux(node *curr, int key, const T &
         curr->m_left_son=insert_aux(curr->m_left_son,key,data, inserted);
     }
     else if (key>curr->m_key) {
-        curr->m_right_son_son=insert_aux(curr->m_right_son,key,data, inserted);
+        curr->m_right_son=insert_aux(curr->m_right_son,key,data, inserted);
     }
     //if key already exists we ruturn curr
     else {
         inserted=false;
-        return curr;
+        return curr; // <-- This return stops the function here.
     }
     ///now we update the tree height:
-    update_height(curr);
+    update_height(curr); // These lines are correctly skipped on duplicate.
     return rebalance(curr);
 }
+template<class T>
+node* AVLTree<T>::find_aux(node* curr, int key) {
+    if (curr == nullptr || curr->m_key == key) {
+        return curr;
+    }
+    return (key < curr->m_key) ? find_aux(curr->m_left_son, key) : find_aux(curr->m_right_son, key);
+}
+
+/**
+ * AVLTree<T>::remove_aux
+ *
+ * there is three cases:
+ *
+ * 1. Node has one child at most:
+ * we delete the node, and its single child (or nullptr for a leaf) is returned to replace it.
+ *
+ * 2. Node has two children:
+ * To maintain the BST property, the content (key and data) of the node to be deleted is replaced
+ * with the content of its IN-ORDER SUCCESSOR (the node with the smallest key in the right subtree).
+ * A second recursive call to remove_aux is then made on the right subtree to physically delete the successor.
+ * After the recursive call, the current node proceeds with update_height and rebalance.
+ */
+template<class T>
+typename AVLTree<T>::node* AVLTree<T>::remove_aux(node* curr, int key, bool& deleted) {
+    // if key not found in this subtree
+    if (curr == nullptr) {
+        deleted = false;
+        return nullptr;
+    }
+
+    if (key < curr->m_key) {
+        curr->m_left_son = remove_aux(curr->m_left_son, key, deleted);
+    }
+    else if (key > curr->m_key) {
+        curr->m_right_son = remove_aux(curr->m_right_son, key, deleted);
+    }
+    else {
+        // Found the node to delete
+        deleted = true;
+
+        //first case: node with at most one child
+        //--- node is a leaf (עלה)---
+        if (curr->m_left_son == nullptr && curr->m_right_son == nullptr) {
+            delete curr;
+            return nullptr;
+        }
+        // ---- node has only right child ----
+        else if (curr->m_left_son == nullptr && curr->m_right_son != nullptr) {
+            node* child = curr->m_right_son;
+            curr->m_right_son = nullptr;
+            delete curr;
+            return child;
+        }
+        // ---- node has only left child ----
+        else if (curr->m_right_son == nullptr && curr->m_left_son != nullptr) {
+            node* child = curr->m_left_son;
+            curr->m_left_son = nullptr;
+            delete curr;
+            return child;
+        }
+        // second case: node with two children
+        node* inorderSuccessor = curr->m_right_son;
+        while (inorderSuccessor->m_left_son != nullptr) {
+            inorderSuccessor = inorderSuccessor->m_left_son;
+        }
+        curr->m_key = inorderSuccessor->m_key;
+        curr->m_data = inorderSuccessor->m_data;
+        bool successorWasDeleted = false;
+        curr->m_right_son = remove_aux(curr->m_right_son, inorderSuccessor->m_key, successorWasDeleted);
+    }
+
+    update_height(curr);
+    return rebalance(curr);
+    }
+
 
 
 
@@ -164,6 +242,17 @@ bool AVLTree<T>::insert(int key, const T &data) {
     bool inserted=false;
     m_root= insert_aux(m_root, key, data, inserted);
     return inserted;
+}
+template<class T>
+node* AVLTree<T>::find(int key) {
+    return find_aux(m_root, key);
+}
+
+template<class T>
+bool AVLTree<T>::remove(int key) {
+    bool deleted = false;
+    m_root = remove_aux(m_root, key, deleted);
+    return deleted;
 }
 
 
