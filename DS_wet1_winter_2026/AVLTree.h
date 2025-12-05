@@ -14,6 +14,7 @@
 //TODO find anwar
 
 
+
 template<class T>
 class AVLTree {
 private:
@@ -48,6 +49,8 @@ public:
     AVLTree() : m_root(nullptr) {}
     int get_height(node* v);
     ~AVLTree() { delete m_root; }
+    AVLTree(const AVLTree& other) = delete;
+    AVLTree& operator=(const AVLTree& other) = delete;
     void update_height(node* v);
     int balance_factor(node* v);
 
@@ -100,7 +103,7 @@ typename AVLTree<T>::node *AVLTree<T>::insert_aux(node *curr, int key, const T &
     //if key already exists we ruturn curr
     else {
         inserted=false;
-        return curr; // <-- This return stops the function here.
+        return curr;
     }
     ///now we update the tree height:
     update_height(curr); // These lines are correctly skipped on duplicate.
