@@ -3,7 +3,10 @@
 
 #include "TechSystem26a1.h"
 
-//
+bool invalid_input(int id) {
+    return id >= 0;
+}
+
 TechSystem::TechSystem()
 {
     
