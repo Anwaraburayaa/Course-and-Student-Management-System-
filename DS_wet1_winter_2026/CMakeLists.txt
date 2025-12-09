@@ -10,4 +10,5 @@ add_executable(main26.a1 main26a1.cpp
         wet1util.h
         Student.h
         Course.h
+        Course.cpp
 )

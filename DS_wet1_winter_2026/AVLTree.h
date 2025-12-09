@@ -1,20 +1,6 @@
 #pragma once
 
 
-//TODO L haya
-//TODO R haya
-//TODO LR haya
-//TODO RR haya
-//TODO LL haya
-//TODO RL haya
-//TODO node stuff anwar
-//TODO big three of tree anwar
-//TODO insert anwar
-//TODO remove anwar
-//TODO find anwar
-
-
-
 template<class T>
 class AVLTree {
 private:
@@ -35,25 +21,28 @@ private:
             delete m_right_son;
         }
     };
+
     node* m_root;
-    //helper recurrsive funtions for insert, find & delete:
-    node* insert_aux(node* curr, int key, const T& data, bool& inserted);
+    node* insert_aux(node* curr, int key, const T& data, bool& inserted);  //helper recursive functions for insert, find & delete:
     node* find_aux(node* curr, int key);
     node* remove_aux(node* curr, int key, bool& deleted);
-//helper fuction max:
+
     int max2(int a, int b) const {
         return (a > b) ? a : b;
     }
+
 public:
 
     AVLTree() : m_root(nullptr) {}
-    int get_height(node* v);
     ~AVLTree() { delete m_root; }
     AVLTree(const AVLTree& other) = delete;
     AVLTree& operator=(const AVLTree& other) = delete;
+
     void update_height(node* v);
     int balance_factor(node* v);
+    int get_height(node* v);
     bool id_in_tree(int id);
+    bool tree_is_empty();
 
     node* rotate_right(node* d);
     node* rotate_left(node* d);
@@ -61,17 +50,14 @@ public:
     node* rotate_right_left(node* f);
     node* rebalance(node* v);
 
-
     node* find(int key);
     bool insert(int key, const T& data);
     bool remove(int key);
 
 };
 
+
 /*-----cotrs-----*/
-
-
-
 template <class T>
 int AVLTree<T>::get_height(node* v) {
     return (v == nullptr) ? 0 : v->m_height;
@@ -91,6 +77,11 @@ int AVLTree<T>::balance_factor(node* v) {
 template <class T>
 bool AVLTree<T>::id_in_tree(int id) {
     return find(id) != nullptr;
+}
+
+template <class T>
+bool AVLTree<T>::tree_is_empty() {
+    return !m_root;
 }
 
 template<class T>
