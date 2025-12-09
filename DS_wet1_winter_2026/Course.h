@@ -1,8 +1,19 @@
-//
-// Created by anwar on 12/9/2025.
-//
+#pragma once
 
-#ifndef COURSES_H
-#define COURSES_H
+#include "AVLTree.h"
+#include "Student.h"
 
-#endif //COURSES_H
+
+class Course
+{
+private:
+    int m_course_id;
+    int m_credit;
+    AVLTree<Student*> enrolled;
+
+
+
+};
+
+
+

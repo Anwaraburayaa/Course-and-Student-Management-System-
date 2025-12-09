@@ -1,8 +1,19 @@
-//
-// Created by anwar on 12/9/2025.
-//
+#pragma once
 
-#ifndef STUDENTS_H
-#define STUDENTS_H
 
-#endif //STUDENTS_H
+class Student
+{
+public:
+    int m_student_id;
+    int m_enrolled_credits;
+    int m_earned_credits;
+    int m_applied_bonus;
+
+};
+
+
+
+
+
+
+

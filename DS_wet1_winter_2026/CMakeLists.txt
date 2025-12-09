@@ -8,4 +8,6 @@ add_executable(main26.a1 main26a1.cpp
         TechSystem26a1.h
         AVLTree.h
         wet1util.h
+        Student.h
+        Course.h
 )
