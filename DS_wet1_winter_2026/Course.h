@@ -3,6 +3,7 @@
 #include "AVLTree.h"
 #include "Student.h"
 
+//TODO basic class functionality
 
 class Course
 {

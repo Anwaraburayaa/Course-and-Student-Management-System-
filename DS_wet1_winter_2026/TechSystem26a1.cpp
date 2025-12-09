@@ -3,7 +3,7 @@
 
 #include "TechSystem26a1.h"
 
-
+//
 TechSystem::TechSystem()
 {
     

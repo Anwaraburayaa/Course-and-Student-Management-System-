@@ -53,6 +53,7 @@ public:
     AVLTree& operator=(const AVLTree& other) = delete;
     void update_height(node* v);
     int balance_factor(node* v);
+    bool id_in_tree(int id);
 
     node* rotate_right(node* d);
     node* rotate_left(node* d);
@@ -69,6 +70,8 @@ public:
 
 /*-----cotrs-----*/
 
+
+
 template <class T>
 int AVLTree<T>::get_height(node* v) {
     return (v == nullptr) ? 0 : v->m_height;
@@ -83,6 +86,11 @@ void AVLTree<T>::update_height(node* v){
 template <class T>
 int AVLTree<T>::balance_factor(node* v) {
     return get_height(v->m_left_son) - get_height(v->m_right_son);
+}
+
+template <class T>
+bool AVLTree<T>::id_in_tree(int id) {
+    return find(id) != nullptr;
 }
 
 template<class T>
