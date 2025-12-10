@@ -3,8 +3,10 @@
 
 #include "TechSystem26a1.h"
 
-bool invalid_input(int id) {
-    return id >= 0;
+
+
+bool TechSystem::invalid_input(int id) {
+    return id <= 0;
 }
 
 TechSystem::TechSystem()
@@ -29,6 +31,14 @@ StatusType TechSystem::removeStudent(int studentId)
 
 StatusType TechSystem::addCourse(int courseId, int points)
 {
+    if (invalid_input(courseId) || invalid_input(points)) {
+        return StatusType::INVALID_INPUT;
+    }
+    if (!courses.id_in_tree(courseId)) {
+        return StatusType::FAILURE;
+    }
+    courses.insert(courseId, points);
+
     return StatusType::FAILURE;
 }
 

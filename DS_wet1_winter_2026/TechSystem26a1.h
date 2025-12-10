@@ -19,7 +19,9 @@
 class TechSystem {
 private:
     AVLTree<Student*> students;
-    AVLTree<Course*> courses; //might need to reevaluate
+    AVLTree<Course*> courses;
+
+    bool invalid_input(int id);
     
 public:
     // <DO-NOT-MODIFY> {
