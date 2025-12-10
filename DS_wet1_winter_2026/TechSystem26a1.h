@@ -14,12 +14,12 @@
 #define TechSystem26WINTER_WET1_H_
 
 #include "wet1util.h"
+#include "Course.h"
 
 class TechSystem {
 private:
-    //
-    // Here you may add anything you want
-    //
+    AVLTree<Student*> students;
+    AVLTree<Course*> courses; //might need to reevaluate
     
 public:
     // <DO-NOT-MODIFY> {
