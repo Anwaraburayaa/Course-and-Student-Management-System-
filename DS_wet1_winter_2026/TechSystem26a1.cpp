@@ -34,12 +34,21 @@ StatusType TechSystem::addCourse(int courseId, int points)
     if (invalid_input(courseId) || invalid_input(points)) {
         return StatusType::INVALID_INPUT;
     }
-    if (!courses.id_in_tree(courseId)) {
+    if (courses.id_in_tree(courseId)) {
         return StatusType::FAILURE;
     }
-    courses.insert(courseId, points);
-
-    return StatusType::FAILURE;
+    Course* new_course = nullptr;
+    try {
+        new_course = new Course(courseId, points);
+        if (!courses.insert(courseId, new_course)) {
+            delete new_course;
+            return StatusType::FAILURE;
+        }
+    } catch (std::bad_alloc&) {
+        delete new_course;
+        return StatusType::ALLOCATION_ERROR;
+    }
+    return StatusType::SUCCESS;
 }
 
 StatusType TechSystem::removeCourse(int courseId)

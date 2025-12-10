@@ -11,10 +11,7 @@ private:
 
 public:
 
-    Course(int course_id, int credits) : m_course_id(course_id), m_credits(credits), enrolled() {
-
-    }
-
+    Course(int course_id, int credits);
     ~Course();
 
     int get_course_id() const;

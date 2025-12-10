@@ -15,6 +15,7 @@
 
 #include "wet1util.h"
 #include "Course.h"
+#include "exception"
 
 class TechSystem {
 private:
