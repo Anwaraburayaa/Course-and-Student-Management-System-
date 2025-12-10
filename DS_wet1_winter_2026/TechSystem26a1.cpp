@@ -1,5 +1,5 @@
 // You can edit anything you want in this file.
-// However you need to implement all public StudentCourseManager function, as provided below as a template
+// However, you need to implement all public StudentCourseManager function, as provided below as a template
 
 #include "TechSystem26a1.h"
 
@@ -53,7 +53,19 @@ StatusType TechSystem::addCourse(int courseId, int points)
 
 StatusType TechSystem::removeCourse(int courseId)
 {
-    return StatusType::FAILURE;
+    if (invalid_input(courseId)) {
+        return StatusType::INVALID_INPUT;
+    }
+    Course* course_to_remove = courses.get_data(courseId);
+    if (!course_to_remove || !course_to_remove->is_empty()) {
+        return StatusType::FAILURE;
+    }
+    delete course_to_remove;
+    if (!courses.remove(courseId)) {
+        return StatusType::FAILURE;
+    }
+    return StatusType::SUCCESS;
+
 }
 
 StatusType TechSystem::enrollStudent(int studentId, int courseId)

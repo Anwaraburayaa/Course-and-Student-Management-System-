@@ -24,4 +24,8 @@ void Course::set_credits(const int credits) {
     this->m_credits = credits;
 }
 
+bool Course::is_empty() {
+    return enrolled.tree_is_empty();
+}
+
 

@@ -43,6 +43,7 @@ public:
     int get_height(node* v);
     bool id_in_tree(int id);
     bool tree_is_empty();
+    T get_data(int key);
 
     node* rotate_right(node* d);
     node* rotate_left(node* d);
@@ -84,14 +85,22 @@ bool AVLTree<T>::tree_is_empty() {
     return !m_root;
 }
 
+template <class T>
+T AVLTree<T>::get_data(int key) {
+    AVLTree<T>::node* result = find(key);
+    return (result == nullptr) ? nullptr : result->m_data; //if key not in tree return null otherwise return the node
+}
+
+
+
 template<class T>
 typename AVLTree<T>::node *AVLTree<T>::insert_aux(node *curr, int key, const T &data, bool &inserted) {
-    //if the tree is empty we insert the new nood at the root
+    //if the tree is empty we insert the new node at the root
     if (curr==nullptr) {
         inserted=true;
         return new node(data,key);
     }
-    //if the tree is not empty we do the presses recursivly tell we find it place
+    //if the tree is not empty we do the presses recursively tell we find it place
     //we first compare the key to the root
     if (key< curr->m_key) {
         curr->m_left_son=insert_aux(curr->m_left_son,key,data, inserted);
@@ -99,7 +108,7 @@ typename AVLTree<T>::node *AVLTree<T>::insert_aux(node *curr, int key, const T &
     else if (key>curr->m_key) {
         curr->m_right_son=insert_aux(curr->m_right_son,key,data, inserted);
     }
-    //if key already exists we ruturn curr
+    //if key already exists we return curr
     else {
         inserted=false;
         return curr;

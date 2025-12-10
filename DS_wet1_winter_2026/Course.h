@@ -18,6 +18,7 @@ public:
     int get_credits() const;
     void set_course_id(int course_id);
     void set_credits(int credits);
+    bool is_empty();
 
 };
 
