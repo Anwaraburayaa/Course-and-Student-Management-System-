@@ -43,7 +43,7 @@ public:
     int get_height(node* v);
     bool id_in_tree(int id);
     bool tree_is_empty();
-    T get_data(int key);
+    T find_node(int key);
 
     node* rotate_right(node* d);
     node* rotate_left(node* d);
@@ -86,7 +86,7 @@ bool AVLTree<T>::tree_is_empty() {
 }
 
 template <class T>
-T AVLTree<T>::get_data(int key) {
+T AVLTree<T>::find_node(int key) {
     AVLTree<T>::node* result = find(key);
     return (result == nullptr) ? nullptr : result->m_data; //if key not in tree return null otherwise return the node
 }

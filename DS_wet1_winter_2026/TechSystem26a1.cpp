@@ -56,7 +56,7 @@ StatusType TechSystem::removeCourse(int courseId)
     if (invalid_input(courseId)) {
         return StatusType::INVALID_INPUT;
     }
-    Course* course_to_remove = courses.get_data(courseId);
+    Course* course_to_remove = courses.find_node(courseId);
     if (!course_to_remove || !course_to_remove->is_empty()) {
         return StatusType::FAILURE;
     }
@@ -75,7 +75,23 @@ StatusType TechSystem::enrollStudent(int studentId, int courseId)
 
 StatusType TechSystem::completeCourse(int studentId, int courseId)
 {
-    return StatusType::FAILURE;
+    if (invalid_input(studentId) || invalid_input(courseId)) {
+        return StatusType::INVALID_INPUT;
+    }
+    Course* course_completed = courses.find_node(courseId); // log(m) finding the course
+    if (!course_completed) {
+        return StatusType::FAILURE;
+    }
+    Student* current_student = course_completed->get_enrolled_student(studentId);
+    if (!current_student) {
+        return StatusType::FAILURE;
+    }
+    current_student->update_earned_points(course_completed->get_points());
+    current_student->update_enrolled_points(-1*course_completed->get_points());
+    if (!course_completed->remove_enrolled_student(studentId)) {
+        return StatusType::FAILURE;
+    }
+    return StatusType::SUCCESS;
 }
 
 StatusType TechSystem::awardAcademicPoints(int points)
