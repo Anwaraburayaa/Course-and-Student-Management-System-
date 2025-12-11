@@ -8,15 +8,21 @@ private:
     int m_student_id;
     int m_enrolled_points;
     int m_earned_points;
-    int m_applied_bonus;
+    int m_bonus_offset;
 public:
     // getters and setters for point updating
+    Student(int student_id, int creation_offset_value); // in techsystem the static field
     int get_enrolled_points();
     int get_earned_points();
     void update_enrolled_points(int points);
     void update_earned_points(int points);
+    int get_bonus(int current_total_bonus) const; // get the total when called in techsystem
+
+
 
 };
+
+
 
 
 
