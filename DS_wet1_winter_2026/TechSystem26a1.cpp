@@ -17,14 +17,22 @@ bool TechSystem::invalid_input(int id) {
     return id <= 0;
 }
 
-TechSystem::TechSystem()
+TechSystem::TechSystem() :students(),courses()
 {
-    
+    total_bonus_tracker = 0;
 }
 
-TechSystem::~TechSystem()
-{
-    
+TechSystem::~TechSystem() {
+    //  deletes the actual 'Student*' pointers.
+    students.delete_stored_data();
+
+    // We call the helper on the courses tree.
+    // Note: The ~Course() destructor will automatically run when a Course
+    // is deleted, destroying the course's internal 'enrolled' tree.
+    courses.delete_stored_data();
+    //** The AVLTree destructors (~AVLTree) for 'students' and 'courses'
+    //are called automatically at the end of this function to delete
+    //**// the tree structure (the nodes themselves).
 }
 
 StatusType TechSystem::addStudent(int studentId)
