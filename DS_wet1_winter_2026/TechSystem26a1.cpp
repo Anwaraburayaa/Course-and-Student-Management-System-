@@ -66,7 +66,22 @@ StatusType TechSystem::addStudent(int studentId)
 
 StatusType TechSystem::removeStudent(int studentId)
 {
-    return StatusType::FAILURE;
+   if (invalid_input(studentId)) {
+       return StatusType::INVALID_INPUT;
+   }
+    bool student_exists = students.id_in_tree(studentId);
+    if (!student_exists) {
+        return StatusType::FAILURE;
+    }
+    Student* student_to_remove = students.find_node(studentId);
+    if (!(student_to_remove->has_finished_courses())) {
+        return StatusType::FAILURE;
+    }
+    else {
+        delete student_to_remove;
+        students.remove(studentId);
+        return StatusType::SUCCESS;
+    }
 }
 
 StatusType TechSystem::addCourse(int courseId, int points)
@@ -110,7 +125,39 @@ StatusType TechSystem::removeCourse(int courseId)
 
 StatusType TechSystem::enrollStudent(int studentId, int courseId)
 {
-    return StatusType::FAILURE;
+    if (invalid_input(studentId) || invalid_input(courseId)) {
+        return StatusType::INVALID_INPUT;
+    }
+
+
+    Course* course_enrolled = courses.find_node(courseId);
+    if (!course_enrolled) {
+        return StatusType::FAILURE;
+    }
+
+
+    Student* current_student = students.find_node(studentId);
+    if (!current_student) {
+        return StatusType::FAILURE;
+    }
+
+    try {
+
+        // Returns false if student is already in the course
+        bool is_enrolled = course_enrolled->insert_enrolled_student(studentId, current_student);
+
+        if (!is_enrolled) {
+            return StatusType::FAILURE;
+        }
+
+        current_student->increment_active_courses();
+
+        return StatusType::SUCCESS;
+    }
+    catch (const std::bad_alloc& e) {
+
+        return StatusType::ALLOCATION_ERROR;
+    }
 }
 
 StatusType TechSystem::completeCourse(int studentId, int courseId)
