@@ -9,6 +9,7 @@ private:
     int m_enrolled_points;
     int m_earned_points;
     int m_bonus_offset;
+    //added this field in order to know when we can delete a student
     int m_active_courses_count;
 
 public:
@@ -26,10 +27,12 @@ public:
     void update_earned_points(int points);
     int get_bonus(int current_total_bonus) const; // get the total when called in techsystem
 
-
+    void increment_active_courses();
+    void decrement_active_courses();
     //a helper method to check if the student is enrolled to any courses currently
     //we will use it to check if we can remove him from the system
     bool has_finished_courses() const;
+
 
 };
 

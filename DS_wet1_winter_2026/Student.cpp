@@ -29,6 +29,18 @@ void Student::update_enrolled_points(int points) {
 void Student::update_earned_points(int points) {
     m_earned_points+=points;
 }
+
+//helper to add course
+void Student::increment_active_courses() {
+    m_active_courses_count++;
+}
+
+// Helper to remove course
+void Student::decrement_active_courses() {
+    if (m_active_courses_count > 0) {
+        m_active_courses_count--;
+    }
+}
 bool Student::has_finished_courses() const {
     return this->m_enrolled_points== 0;
 }
