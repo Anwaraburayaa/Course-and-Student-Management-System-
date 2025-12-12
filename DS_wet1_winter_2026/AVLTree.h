@@ -26,6 +26,8 @@ private:
     node* insert_aux(node* curr, int key, const T& data, bool& inserted);  //helper recursive functions for insert, find & delete:
     node* find_aux(node* curr, int key);
     node* remove_aux(node* curr, int key, bool& deleted);
+    ///a helper method to delete data from nodes-useful for preventing memory leaks
+    void delete_stored_data_aux(node* curr);
 
     int max2(int a, int b) const {
         return (a > b) ? a : b;
@@ -54,6 +56,7 @@ public:
     node* find(int key);
     bool insert(int key, const T& data);
     bool remove(int key);
+    void delete_stored_data();
 
 };
 
@@ -282,7 +285,25 @@ bool AVLTree<T>::remove(int key) {
     return deleted;
 }
 
+template <class T>
+void AVLTree<T>::delete_stored_data_aux(node* curr) {
+    if (curr == nullptr) {
+        return;
+    }
 
+    deleteStoredDataAux(curr->m_left_son);
+    deleteStoredDataAux(curr->m_right_son);
+
+    if (curr->m_data != nullptr) {
+        delete curr->m_data;
+        curr->m_data = nullptr;
+    }
+}
+
+template <class T>
+void AVLTree<T>::delete_stored_data() {
+    deleteStoredDataAux(m_root);
+}
 
 
 
