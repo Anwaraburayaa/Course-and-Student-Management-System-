@@ -291,8 +291,8 @@ void AVLTree<T>::delete_stored_data_aux(node* curr) {
         return;
     }
 
-    deleteStoredDataAux(curr->m_left_son);
-    deleteStoredDataAux(curr->m_right_son);
+    delete_stored_data_aux(curr->m_left_son);
+  delete_stored_data_aux(curr->m_right_son);
 
     if (curr->m_data != nullptr) {
         delete curr->m_data;
@@ -302,7 +302,7 @@ void AVLTree<T>::delete_stored_data_aux(node* curr) {
 
 template <class T>
 void AVLTree<T>::delete_stored_data() {
-    deleteStoredDataAux(m_root);
+    delete_stored_data_aux(m_root);
 }
 
 
