@@ -9,6 +9,8 @@ private:
     int m_enrolled_points;
     int m_earned_points;
     int m_bonus_offset;
+    int m_active_courses_count;
+
 public:
     //ctor & dtor:
     Student(int student_id, int creation_offset_value); // in techsystem the static field
