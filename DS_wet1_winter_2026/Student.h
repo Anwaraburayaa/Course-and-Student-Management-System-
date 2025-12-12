@@ -11,12 +11,12 @@ private:
     int m_bonus_offset;
 public:
     //ctor & dtor:
-    Student(int student_id, int current_global_bonus);
+    Student(int student_id, int creation_offset_value); // in techsystem the static field
     ~Student()=default;
     Student(const Student& other)=delete;
     Student& operator=(const Student& other)=delete;
     // getters and setters for point updating
-    Student(int student_id, int creation_offset_value); // in techsystem the static field
+
     int get_student_id();
     int get_enrolled_points();
     int get_earned_points();
