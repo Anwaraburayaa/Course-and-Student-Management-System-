@@ -69,22 +69,31 @@ StatusType TechSystem::addStudent(int studentId)
 
 StatusType TechSystem::removeStudent(int studentId)
 {
-   if (invalid_input(studentId)) {
-       return StatusType::INVALID_INPUT;
-   }
-    bool student_exists = students.id_in_tree(studentId);
-    if (!student_exists) {
+    if (invalid_input(studentId)) {
+        return StatusType::INVALID_INPUT;
+    }
+
+    Student* student_to_remove = students.find_node(studentId);
+
+    // 1. Check if the student exists
+    if (!student_to_remove) {
         return StatusType::FAILURE;
     }
-    Student* student_to_remove = students.find_node(studentId);
+
+    // 2. Policy Check: Must have finished all courses
     if (!(student_to_remove->has_finished_courses())) {
         return StatusType::FAILURE;
     }
-    else {
-        delete student_to_remove;
-        students.remove(studentId);
-        return StatusType::SUCCESS;
+
+    // 3. Safely remove the node from the AVL tree structure first.
+    if (!students.remove(studentId)) {
+        return StatusType::FAILURE;
     }
+
+    // 4. Delete the actual student object (now that it's no longer referenced by the tree).
+    delete student_to_remove;
+
+    return StatusType::SUCCESS;
 }
 
 StatusType TechSystem::addCourse(int courseId, int points)
@@ -153,6 +162,9 @@ StatusType TechSystem::enrollStudent(int studentId, int courseId)
             return StatusType::FAILURE;
         }
 
+        // *** FIX: Update enrolled points (Missing logic) ***
+        current_student->update_enrolled_points(course_enrolled->get_points());
+
         current_student->increment_active_courses();
 
         return StatusType::SUCCESS;
@@ -162,6 +174,7 @@ StatusType TechSystem::enrollStudent(int studentId, int courseId)
         return StatusType::ALLOCATION_ERROR;
     }
 }
+
 
 StatusType TechSystem::completeCourse(int studentId, int courseId)
 {

@@ -188,6 +188,10 @@ typename AVLTree<T>::node* AVLTree<T>::remove_aux(node* curr, int key, bool& del
         }
         curr->m_key = inorderSuccessor->m_key;
         curr->m_data = inorderSuccessor->m_data;
+
+        //fix
+        inorderSuccessor->m_data = nullptr;
+
         bool successorWasDeleted = false;
         curr->m_right_son = remove_aux(curr->m_right_son, inorderSuccessor->m_key, successorWasDeleted);
     }
