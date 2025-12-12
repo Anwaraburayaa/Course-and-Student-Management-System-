@@ -19,9 +19,9 @@ public:
     Student& operator=(const Student& other)=delete;
     // getters and setters for point updating
 
-    int get_student_id();
-    int get_enrolled_points();
-    int get_earned_points();
+    int get_student_id() const;
+    int get_enrolled_points() const;
+    int get_earned_points() const;
     void update_enrolled_points(int points);
     void update_earned_points(int points);
     int get_bonus(int current_total_bonus) const; // get the total when called in techsystem
