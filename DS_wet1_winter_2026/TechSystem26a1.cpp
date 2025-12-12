@@ -37,8 +37,32 @@ TechSystem::~TechSystem() {
 
 StatusType TechSystem::addStudent(int studentId)
 {
-    return StatusType::FAILURE;
+    //check if the id is valid
+    if (invalid_input(studentId)) {
+    return StatusType::INVALID_INPUT;
 }
+    //check if the student already exists
+    bool student_exists = students.id_in_tree(studentId);
+    if (student_exists) {
+        return StatusType::FAILURE;
+    }
+    //we try to insert the new student and if we get null we delete
+    try {
+        Student* new_student = new Student(studentId, total_bonus_tracker);
+        bool inserted = students.insert(studentId, new_student);
+        if (!inserted) {
+            delete new_student;
+        }
+    }
+        catch (const std::bad_alloc& e) {
+            return StatusType::ALLOCATION_ERROR;
+        }
+//adding succeeded
+        return StatusType::SUCCESS;
+    }
+
+
+
 
 StatusType TechSystem::removeStudent(int studentId)
 {
