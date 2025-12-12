@@ -46,21 +46,24 @@ StatusType TechSystem::addStudent(int studentId)
     if (student_exists) {
         return StatusType::FAILURE;
     }
-    //we try to insert the new student and if we get null we delete
+
+    Student* new_student = nullptr;
     try {
-        Student* new_student = new Student(studentId, total_bonus_tracker);
+        new_student = new Student(studentId, total_bonus_tracker);
         bool inserted = students.insert(studentId, new_student);
         if (!inserted) {
             delete new_student;
+            return StatusType::FAILURE; // Should not happen if id_in_tree passed
         }
     }
-        catch (const std::bad_alloc& e) {
-            return StatusType::ALLOCATION_ERROR;
-        }
-//adding succeeded
-        return StatusType::SUCCESS;
+    catch (const std::bad_alloc& e) {
+        // CRITICAL FIX: If insert throws, we must delete the student we created
+        delete new_student;
+        return StatusType::ALLOCATION_ERROR;
     }
 
+    return StatusType::SUCCESS;
+}
 
 
 
