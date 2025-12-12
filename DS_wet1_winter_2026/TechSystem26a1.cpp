@@ -128,6 +128,7 @@ StatusType TechSystem::completeCourse(int studentId, int courseId)
     }
     current_student->update_earned_points(course_completed->get_points());
     current_student->update_enrolled_points(-1*course_completed->get_points());
+    current_student->decrement_active_courses();
     if (!course_completed->remove_enrolled_student(studentId)) {
         return StatusType::FAILURE;
     }
@@ -155,3 +156,4 @@ output_t<int> TechSystem::getStudentPoints(int studentId)
     return current_student->get_bonus(total_bonus_tracker) + current_student->get_earned_points();
     return StatusType::SUCCESS;
 }
+
