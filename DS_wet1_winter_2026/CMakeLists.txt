@@ -11,4 +11,5 @@ add_executable(main26.a1 main26a1.cpp
         Student.h
         Course.h
         Course.cpp
+        Student.cpp
 )

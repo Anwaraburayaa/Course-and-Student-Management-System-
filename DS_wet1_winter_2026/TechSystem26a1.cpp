@@ -3,7 +3,15 @@
 
 #include "TechSystem26a1.h"
 
+int TechSystem::total_bonus_tracker = 0;
 
+void TechSystem::update_bonus_tracker(int points) {
+    total_bonus_tracker += points;
+}
+
+int TechSystem::get_total_bonus() {
+    return total_bonus_tracker;
+}
 
 bool TechSystem::invalid_input(int id) {
     return id <= 0;
@@ -96,10 +104,22 @@ StatusType TechSystem::completeCourse(int studentId, int courseId)
 
 StatusType TechSystem::awardAcademicPoints(int points)
 {
-    return StatusType::FAILURE;
+    if (invalid_input(points)) {
+        return StatusType::INVALID_INPUT;
+    }
+    update_bonus_tracker(points);
+    return StatusType::SUCCESS;
 }
 
 output_t<int> TechSystem::getStudentPoints(int studentId)
 {
-    return 0;
+    if (invalid_input(studentId)) {
+        return StatusType::INVALID_INPUT;
+    }
+    Student* current_student = students.find_node(studentId);
+    if (!current_student) {
+        return StatusType::FAILURE;
+    }
+    return current_student->get_bonus(total_bonus_tracker) + current_student->get_earned_points();
+    return StatusType::SUCCESS;
 }

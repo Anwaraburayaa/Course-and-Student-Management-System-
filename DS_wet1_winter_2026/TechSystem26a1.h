@@ -19,6 +19,10 @@
 
 class TechSystem {
 private:
+    static int total_bonus_tracker;
+    static void update_bonus_tracker(int points);
+    static int get_total_bonus();
+
     AVLTree<Student*> students;
     AVLTree<Course*> courses;
 
