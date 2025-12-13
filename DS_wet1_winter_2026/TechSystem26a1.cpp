@@ -115,10 +115,10 @@ StatusType TechSystem::removeCourse(int courseId)
     if (!course_to_remove || !course_to_remove->is_empty()) {
         return StatusType::FAILURE;
     }
-    delete course_to_remove;
     if (!courses.remove(courseId)) {
         return StatusType::FAILURE;
     }
+    delete course_to_remove;
     return StatusType::SUCCESS;
 
 }
