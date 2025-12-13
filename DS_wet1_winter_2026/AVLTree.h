@@ -17,8 +17,9 @@ private:
         m_right_son(nullptr){}
 
         ~node() {
-            delete m_left_son;
-            delete m_right_son;
+            // Don't recursively delete children
+            m_left_son = nullptr;
+            m_right_son = nullptr;
         }
     };
 
@@ -28,6 +29,7 @@ private:
     node* remove_aux(node* curr, int key, bool& deleted);
     ///a helper method to delete data from nodes-useful for preventing memory leaks
     void delete_stored_data_aux(node* curr);
+    void delete_tree_helper(node* curr);
 
     int max2(int a, int b) const {
         return (a > b) ? a : b;
@@ -36,7 +38,10 @@ private:
 public:
 
     AVLTree() : m_root(nullptr) {}
-    ~AVLTree() { delete m_root; }
+    ~AVLTree() {
+        delete_tree_helper(m_root);
+        m_root = nullptr;
+    }
     AVLTree(const AVLTree& other) = delete;
     AVLTree& operator=(const AVLTree& other) = delete;
 
@@ -308,6 +313,19 @@ template <class T>
 void AVLTree<T>::delete_stored_data() {
     delete_stored_data_aux(m_root);
 }
+
+
+template <class T>
+void AVLTree<T>::delete_tree_helper(node* curr) {
+    if (curr == nullptr) {
+        return;
+    }
+    delete_tree_helper(curr->m_left_son);
+    delete_tree_helper(curr->m_right_son);
+    delete curr;
+}
+
+
 
 
 
