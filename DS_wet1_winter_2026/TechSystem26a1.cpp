@@ -23,16 +23,8 @@ TechSystem::TechSystem() :students(),courses()
 }
 
 TechSystem::~TechSystem() {
-    //  deletes the actual 'Student*' pointers.
     students.delete_stored_data();
-
-    // We call the helper on the courses tree.
-    // Note: The ~Course() destructor will automatically run when a Course
-    // is deleted, destroying the course's internal 'enrolled' tree.
     courses.delete_stored_data();
-    //** The AVLTree destructors (~AVLTree) for 'students' and 'courses'
-    //are called automatically at the end of this function to delete
-    //**// the tree structure (the nodes themselves).
 }
 
 StatusType TechSystem::addStudent(int studentId)
@@ -53,11 +45,10 @@ StatusType TechSystem::addStudent(int studentId)
         bool inserted = students.insert(studentId, new_student);
         if (!inserted) {
             delete new_student;
-            return StatusType::FAILURE; // Should not happen if id_in_tree passed
+            return StatusType::FAILURE;
         }
     }
     catch (const std::bad_alloc& e) {
-        // CRITICAL FIX: If insert throws, we must delete the student we created
         delete new_student;
         return StatusType::ALLOCATION_ERROR;
     }
@@ -75,23 +66,20 @@ StatusType TechSystem::removeStudent(int studentId)
 
     Student* student_to_remove = students.find_node(studentId);
 
-    // 1. Check if the student exists
+    // we check if the student exists
     if (!student_to_remove) {
         return StatusType::FAILURE;
     }
 
-    // 2. Policy Check: Must have finished all courses
+
     if (!(student_to_remove->has_finished_courses())) {
         return StatusType::FAILURE;
     }
 
-    // 3. Safely remove the node from the AVL tree structure first.
     if (!students.remove(studentId)) {
         return StatusType::FAILURE;
     }
-
-    // 4. Delete the actual student object (now that it's no longer referenced by the tree).
-    delete student_to_remove;
+     delete student_to_remove;
 
     return StatusType::SUCCESS;
 }
@@ -162,7 +150,6 @@ StatusType TechSystem::enrollStudent(int studentId, int courseId)
             return StatusType::FAILURE;
         }
 
-        // *** FIX: Update enrolled points (Missing logic) ***
         current_student->update_enrolled_points(course_enrolled->get_points());
 
         current_student->increment_active_courses();
@@ -181,7 +168,7 @@ StatusType TechSystem::completeCourse(int studentId, int courseId)
     if (invalid_input(studentId) || invalid_input(courseId)) {
         return StatusType::INVALID_INPUT;
     }
-    Course* course_completed = courses.find_node(courseId); // log(m) finding the course
+    Course* course_completed = courses.find_node(courseId);
     if (!course_completed) {
         return StatusType::FAILURE;
     }

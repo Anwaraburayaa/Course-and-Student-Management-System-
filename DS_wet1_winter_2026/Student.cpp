@@ -1,7 +1,6 @@
 #include "Student.h"
 
-// The check for (student_id <= 0) happens in TechSystem::addStudent.
-// If we reach here, we assume the ID is valid.
+
 Student::Student(int student_id, int creation_offset_value) :
     m_student_id(student_id),
     m_enrolled_points(0),
