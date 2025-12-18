@@ -12,15 +12,8 @@ private:
         T m_data;
         struct node* m_left_son;
         struct node* m_right_son;
-
-        node(const T& data, int key)  : m_key(key), m_height(1),m_data(data), m_left_son(nullptr),
-        m_right_son(nullptr){}
-
-        ~node() {
-            // Don't recursively delete children
-            m_left_son = nullptr;
-            m_right_son = nullptr;
-        }
+        node(const T& data, int key);
+        ~node();
     };
 
     node* m_root;
@@ -32,17 +25,12 @@ private:
     void delete_stored_data_aux(node* curr);
     void delete_tree_helper(node* curr);
 
-    int max2(int a, int b) const {
-        return (a > b) ? a : b;
-    }
+    int max2(int a, int b) const;
 
 public:
 
-    AVLTree() : m_root(nullptr) {}
-    ~AVLTree() {
-        delete_tree_helper(m_root);
-        m_root = nullptr;
-    }
+    AVLTree();
+    ~AVLTree();
     AVLTree(const AVLTree& other) = delete;
     AVLTree& operator=(const AVLTree& other) = delete;
 
@@ -67,12 +55,32 @@ public:
 };
 
 
-/*-----cotrs-----*/
+/*-----cotrs and dtors-----*/
+
+template <class T>
+AVLTree<T>::node::node(const T& data, int key) : m_key(key), m_height(1),m_data(data),
+    m_left_son(nullptr),m_right_son(nullptr){}
+
+template <class T>
+AVLTree<T>::node::~node() {
+    m_left_son = nullptr;
+    m_right_son = nullptr;
+}
+
+template <class T>
+AVLTree<T>::AVLTree(): m_root(nullptr) {}
+
+template <class T>
+AVLTree<T>::~AVLTree() {
+    delete_tree_helper(m_root);
+    m_root = nullptr;
+}
+
+/*-----internal helper functions-----*/
 template <class T>
 int AVLTree<T>::get_height(node* v) {
     return (v == nullptr) ? 0 : v->m_height;
 }
-/*-----helper internal functions-----*/
 
 template <class T>
 void AVLTree<T>::update_height(node* v){
@@ -95,18 +103,46 @@ bool AVLTree<T>::tree_is_empty() {
 }
 
 template <class T>
-T AVLTree<T>::find_node(int key) {
-    AVLTree<T>::node* result = find(key);
-    return (result == nullptr) ? nullptr : result->m_data; //if key not in tree return null otherwise return the node
+int AVLTree<T>::max2(int a, int b) const {
+    return (a > b) ? a : b;
+}
+
+template <class T>
+void AVLTree<T>::delete_stored_data_aux(node* curr) {
+    if (curr == nullptr) {
+        return;
+    }
+    delete_stored_data_aux(curr->m_left_son);
+    delete_stored_data_aux(curr->m_right_son);
+    if (curr->m_data != nullptr) {
+        delete curr->m_data;
+        curr->m_data = nullptr;
+    }
+}
+
+template <class T>
+void AVLTree<T>::delete_stored_data() {
+    delete_stored_data_aux(m_root);
 }
 
 
+template <class T>
+void AVLTree<T>::delete_tree_helper(node* curr) {
+    if (curr == nullptr) {
+        return;
+    }
+    delete_tree_helper(curr->m_left_son);
+    delete_tree_helper(curr->m_right_son);
+    delete curr;
+}
+
+/*-----internal recursive helper functions for insertion, removal and finding -----*/
 
 template<class T>
 typename AVLTree<T>::node *AVLTree<T>::insert_aux(node *curr, int key, const T &data, bool &inserted) {
     //if the tree is empty we insert the new node at the root
-    if (curr==nullptr) {
-        inserted=true;
+    if (curr == nullptr) {
+        inserted = true;
         return new node(data,key);
     }
     //if the tree is not empty we do the presses recursively tell we find it place
@@ -135,7 +171,7 @@ typename AVLTree<T>::node* AVLTree<T>::find_aux(node* curr, int key) {
     return (key < curr->m_key) ? find_aux(curr->m_left_son, key) : find_aux(curr->m_right_son, key);
 }
 
-/**
+/*
  * AVLTree<T>::remove_aux
  *
  * there is three cases:
@@ -195,7 +231,6 @@ typename AVLTree<T>::node* AVLTree<T>::remove_aux(node* curr, int key, bool& del
         curr->m_key = inorderSuccessor->m_key;
         curr->m_data = inorderSuccessor->m_data;
 
-        //fix
         inorderSuccessor->m_data = nullptr;
 
         bool successorWasDeleted = false;
@@ -206,26 +241,17 @@ typename AVLTree<T>::node* AVLTree<T>::remove_aux(node* curr, int key, bool& del
     return rebalance(curr);
     }
 
-
-
-
-
-
 /*-----rotations----*/
 
 // Performs a single Right Rotation (LL case) by making the left child (b) the new parent of d
-//following the slides names for the nodes
-//b should have bf of +1
-//check for nulls and catching mechanisms (here or in application later)
+// following the slides from the tirgul for names of the nodes
 template <class T>
 typename AVLTree<T>::node* AVLTree<T>::rotate_right(node* d) {
     node* b_left_sub_tree = d->m_left_son;
     d->m_left_son = b_left_sub_tree->m_right_son;
     b_left_sub_tree->m_right_son = d;
-
     update_height(d);
     update_height(b_left_sub_tree);
-
     return b_left_sub_tree;
 }
 
@@ -235,10 +261,8 @@ typename AVLTree<T>::node* AVLTree<T>::rotate_left(node* d) {
     node* b_right_sub_tree = d->m_right_son;
     d->m_right_son = b_right_sub_tree->m_left_son;
     b_right_sub_tree->m_left_son = d;
-
     update_height(d);
     update_height(b_right_sub_tree);
-
     return b_right_sub_tree;
 
 }
@@ -255,28 +279,29 @@ typename AVLTree<T>::node* AVLTree<T>::rotate_right_left(node* f) {
     return rotate_left(f);
 }
 
-// v is the node that was inserted or removed -> the root of the subtree we need to rotate
+// v is the node that was inserted or removed, meaning the root of the subtree we need to rotate
 template <class T>
 typename AVLTree<T>::node* AVLTree<T>::rebalance(node* v) {
     update_height(v);
     int curr_BF = balance_factor(v);
     if (curr_BF > 1) {
-        if (v->m_left_son && balance_factor(v->m_left_son) < 0) {  //check LEFT son
+        if (v->m_left_son && balance_factor(v->m_left_son) < 0) {  //check left son
             return rotate_left_right(v); //(LR) case
         }
         return rotate_right(v); //(LL) case
     }
     if (curr_BF < -1) {
-        if (v->m_right_son && balance_factor(v->m_right_son) > 0) {  //check RIGHT son and compare > 0
+        if (v->m_right_son && balance_factor(v->m_right_son) > 0) {  //check right son and compare > 0
             return rotate_right_left(v); //(RL) case
         }
-        return rotate_left(v); // (RR) case
+        return rotate_left(v); //(RR) case
     }
     return v; //|BF(v)| <= 1
 }
 
 
 /*-----Tree operations-----*/
+
 template<class T>
 bool AVLTree<T>::insert(int key, const T &data) {
     bool inserted=false;
@@ -296,35 +321,14 @@ bool AVLTree<T>::remove(int key) {
 }
 
 template <class T>
-void AVLTree<T>::delete_stored_data_aux(node* curr) {
-    if (curr == nullptr) {
-        return;
-    }
-
-    delete_stored_data_aux(curr->m_left_son);
-  delete_stored_data_aux(curr->m_right_son);
-
-    if (curr->m_data != nullptr) {
-        delete curr->m_data;
-        curr->m_data = nullptr;
-    }
+T AVLTree<T>::find_node(int key) {
+    AVLTree<T>::node* result = find(key);
+    return (result == nullptr) ? nullptr : result->m_data; //if key not in tree return null otherwise return the node
 }
 
-template <class T>
-void AVLTree<T>::delete_stored_data() {
-    delete_stored_data_aux(m_root);
-}
+/*-------------------------------------------------*/
 
 
-template <class T>
-void AVLTree<T>::delete_tree_helper(node* curr) {
-    if (curr == nullptr) {
-        return;
-    }
-    delete_tree_helper(curr->m_left_son);
-    delete_tree_helper(curr->m_right_son);
-    delete curr;
-}
 
 
 

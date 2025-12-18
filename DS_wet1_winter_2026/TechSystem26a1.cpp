@@ -32,7 +32,8 @@ StatusType TechSystem::addStudent(int studentId)
     //check if the id is valid
     if (invalid_input(studentId)) {
     return StatusType::INVALID_INPUT;
-}
+    }
+
     //check if the student already exists
     bool student_exists = students.id_in_tree(studentId);
     if (student_exists) {

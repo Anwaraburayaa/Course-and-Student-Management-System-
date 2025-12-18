@@ -12,6 +12,7 @@ Student::Student(int student_id, int creation_offset_value) :
 
 //---getters---
 int Student::get_bonus(int current_total_bonus) const {
+    // Return only bonus points awarded after student creation
     return current_total_bonus - this->m_bonus_offset;
 }
 

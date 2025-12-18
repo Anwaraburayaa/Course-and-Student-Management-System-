@@ -19,6 +19,8 @@
 
 class TechSystem {
 private:
+    //global bonus given: accumulates all awarded points across system lifetime
+    //students calculate their personal bonus by subtracting their creation offset
     static int total_bonus_tracker;
     static void update_bonus_tracker(int points);
     static int get_total_bonus();
