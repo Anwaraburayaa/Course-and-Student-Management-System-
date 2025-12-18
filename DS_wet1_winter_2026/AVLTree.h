@@ -323,7 +323,7 @@ bool AVLTree<T>::remove(int key) {
 template <class T>
 T AVLTree<T>::find_node(int key) {
     AVLTree<T>::node* result = find(key);
-    return (result == nullptr) ? nullptr : result->m_data; //if key not in tree return null otherwise return the node
+    return (result == nullptr) ? nullptr : result->m_data; //if key not in tree return nullptr otherwise return the node
 }
 
 /*-------------------------------------------------*/
